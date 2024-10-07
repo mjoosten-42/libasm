@@ -5,8 +5,8 @@ global ft_write
 section .text
 
 ft_write:
-	enter	8, 0
-	mov		rax, 1
+	enter	0, 0
+	mov		rax, 1	; write
 	syscall	
 	cmp		rax, 0
 	js		.error

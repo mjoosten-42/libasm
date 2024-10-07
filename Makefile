@@ -2,7 +2,7 @@ NAME 	= libasm.a
 ASM		= nasm
 AFLAGS	= -f elf64
 CC 		= gcc
-CFLAGS  = -Wall -Werror -Wextra -no-pie -e main
+CFLAGS  = -Wall -Werror -Wextra -no-pie
 SRC_DIR = src
 OBJ_DIR = obj
 ASM_EXT = s
@@ -57,6 +57,9 @@ format: files
 
 scan: clean
 	scan-build make
+
+ctags:
+	ctags $(SOURCES)
 
 .PHONY: all test clean fclean re files print format scan
 

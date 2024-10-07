@@ -1,0 +1,35 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_EXCMD	mixed	/number, pattern, mixed, or combineV2/
+!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PATTERN_LENGTH_LIMIT	96	/0 for no limit/
+!_TAG_PROC_CWD	/home/mjoosten/Desktop/libasm/	//
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	5.9.0	//
+cmp	src/ft_strcpy.s	/^	cmp		dh, 0$/;"	d
+error	src/ft_read.s	/^.error:$/;"	l
+error	src/ft_write.s	/^.error:$/;"	l
+extern	src/ft_read.s	/^extern __errno_location$/;"	l
+extern	src/ft_strdup.s	/^extern ft_strcpy$/;"	l
+extern	src/ft_strdup.s	/^extern ft_strlen$/;"	l
+extern	src/ft_strdup.s	/^extern malloc$/;"	l
+extern	src/ft_write.s	/^extern __errno_location$/;"	l
+ft_read	src/ft_read.s	/^ft_read:$/;"	l
+ft_strcmp	src/ft_strcmp.s	/^ft_strcmp:$/;"	l
+ft_strcpy	src/ft_strcpy.s	/^ft_strcpy:$/;"	l
+ft_strdup	src/ft_strdup.s	/^ft_strdup:$/;"	l
+ft_strlen	src/ft_strlen.s	/^ft_strlen:$/;"	l
+ft_write	src/ft_write.s	/^ft_write:$/;"	l
+global	src/ft_read.s	/^global ft_read$/;"	l
+global	src/ft_strcmp.s	/^global ft_strcmp$/;"	l
+global	src/ft_strcpy.s	/^global ft_strcpy$/;"	l
+global	src/ft_strdup.s	/^global ft_strdup$/;"	l
+global	src/ft_strlen.s	/^global ft_strlen$/;"	l
+global	src/ft_write.s	/^global ft_write$/;"	l
+loop	src/ft_strcmp.s	/^.loop:$/;"	l
+loop	src/ft_strcpy.s	/^.loop:$/;"	l
+loop	src/ft_strlen.s	/^	.loop:$/;"	l
+mov	src/ft_strcpy.s	/^	mov		dh, [rsi + rcx]$/;"	d

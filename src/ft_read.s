@@ -5,8 +5,8 @@ global ft_read
 section .text
 
 ft_read:
-	enter	8, 0
-	mov		rax, 0
+	enter	0, 0
+	mov		rax, 0	; read
 	syscall	
 	cmp		rax, 0
 	js		.error

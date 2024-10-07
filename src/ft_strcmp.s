@@ -17,7 +17,7 @@ ft_strcmp:
 	inc		rcx
 	jmp		.loop
 .end:
-	movsx	rax, al
+	movsx	rax, al					; move sign-extended
 	leave
 	ret
 

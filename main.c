@@ -1,17 +1,8 @@
-#include <sys/types.h>
+#include "libasm.h"
+#include <stdio.h>
+#include <malloc.h>
 
-extern char		*ft_strdup(const char *s);
-extern size_t	ft_strlen(const char *s);
-extern char		*ft_strcpy(char *dest, const char *str);
-extern int		ft_strcmp(const char *s1, const char *s2);
-extern ssize_t	ft_write(int fd, const void *buf, size_t count);
-extern ssize_t	ft_read(int fd, void *buf, size_t count);
-
-void ft_put(const char *str) {
-	ft_write(1, str, ft_strlen(str));
-}
-
-int main(void) {
+int main(int argc, char **argv) {
 	/*
 	char *str = "Hello world!\0Unreachable";
 	printf("str: %p\n", str);
@@ -62,6 +53,19 @@ int main(void) {
 	}
 	*/
 
-	ft_strdup("Hello world!");
+	/*
+	char *out = ft_strdup("Hello world!\n");
+
+	if (out) {
+		printf("%s", out);
+		free(out);
+	}
+	*/
+
+	if (argc >= 3){
+		int nr = ft_atoi_base(argv[1], argv[2]);
+
+		printf("nr: %i\n", nr);
+	}
 }
 
