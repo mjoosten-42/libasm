@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <malloc.h>
 
+int cmp(void *, void *);
+
 int main(int argc, char **argv) {
 	/*
 	char *str = "Hello world!\0Unreachable";
@@ -62,10 +64,32 @@ int main(int argc, char **argv) {
 	}
 	*/
 
+	/*
 	if (argc >= 3){
 		int nr = ft_atoi_base(argv[1], argv[2]);
 
 		printf("nr: %i\n", nr);
 	}
+	*/
+
+	t_list *lst = NULL;
+	ft_list_push_front(&lst, (void *)0x123);
+	//printf("first : { next: %p, data: %p }\n", lst->next, lst->data);
+	ft_list_push_front(&lst, (void *)0x456);
+	//printf("first : { next: %p, data: %p }\n", lst->next, lst->data);
+	//printf("second: { next: %p, data: %p }\n", lst->next->next, lst->next->data);
+
+	//printf("size: %i\n", ft_list_size(lst));
+
+	ft_list_sort(&lst, cmp);
+
+	printf("first : { next: %p, data: %p }\n", lst->next, lst->data);
+	printf("second: { next: %p, data: %p }\n", lst->next->next, lst->next->data);
+
+	(void)argc, (void)argv;
+}
+
+int cmp(void *f, void *g) {
+	return f - g;
 }
 

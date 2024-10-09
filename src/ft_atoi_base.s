@@ -90,6 +90,7 @@ ft_atoi_base:
 	mov		eax, r15d
 	imul	r13d		; implied eax
 
+	pop		r15
 	pop		r14
 	pop		r13
 	pop		r12
