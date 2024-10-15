@@ -1,7 +1,10 @@
 #include "libasm.h"
 #include <stdio.h>
 #include <malloc.h>
+#include <stdlib.h>
 
+void assert(int b);
+void nop(void *data);
 int cmp(void *, void *);
 
 int main(int argc, char **argv) {
@@ -73,23 +76,53 @@ int main(int argc, char **argv) {
 	*/
 
 	t_list *lst = NULL;
+	
+	assert(ft_list_size(lst) == 0);
+
 	ft_list_push_front(&lst, (void *)0x123);
-	//printf("first : { next: %p, data: %p }\n", lst->next, lst->data);
+	ft_list_push_front(&lst, (void *)0x789);
 	ft_list_push_front(&lst, (void *)0x456);
-	//printf("first : { next: %p, data: %p }\n", lst->next, lst->data);
-	//printf("second: { next: %p, data: %p }\n", lst->next->next, lst->next->data);
 
-	//printf("size: %i\n", ft_list_size(lst));
+	assert(ft_list_size(lst) == 3);
+	assert(lst->data == (void *)0x456);
+	assert(lst->next->data == (void *)0x789);
+	assert(lst->next->next->data == (void *)0x123);
+	assert(lst->next->next->next == NULL);
 
+	/*
 	ft_list_sort(&lst, cmp);
 
-	printf("first : { next: %p, data: %p }\n", lst->next, lst->data);
-	printf("second: { next: %p, data: %p }\n", lst->next->next, lst->next->data);
+	assert(ft_list_size(lst) == 3);
+	assert(lst->data == (void *)0x123);
+	assert(lst->next->data == (void *)0x456);
+	assert(lst->next->next->data == (void *)0x789);
+	assert(lst->next->next->next == NULL);
+	*/
 
+	printf("nop: %p\n", nop);
+
+	ft_list_remove_if(&lst, (void *)0x789, cmp, nop);
+
+	assert(ft_list_size(lst) == 2);
+	assert(lst->data == (void *)0x123);
+	assert(lst->next->data == (void *)0x456);
+	assert(lst->next->next == NULL);
+	
 	(void)argc, (void)argv;
+}
+
+void nop(void *data) {
+	(void)data;
 }
 
 int cmp(void *f, void *g) {
 	return f - g;
+}
+
+void assert(int b) {
+	if (!b) {
+		fprintf(stderr, "assert failed\n");
+		abort();
+	}
 }
 

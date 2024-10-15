@@ -2,65 +2,53 @@ global ft_list_sort
 
 extern ft_list_push_front
 extern ft_list_size
-extern qsort
 extern malloc
+extern qsort
 
 section .text
 
+; void ft_list_sort(t_list **lst, int (*cmp)())
 ft_list_sort:
 	enter	0, 0
 
-	push	rbx
-	push	r12
-	push	r13
-	push	r14
+	push	rbx				; **lst
+	push	r12				; (*cmp)
+	push	r13				; listsize
+	push	r14				; t_list *array[]
 
-	mov		rbx, rdi		; **lst
-	mov		r12, rsi		; (*cmp)
-	mov		rdi, [rdi]
+	; get listsize, exit early if zero or one
+	mov		rdi, [rbx]
 	call	ft_list_size
-	mov		r13, rax		; lstsize
+	cmp		rax, 2
+	jge		.end
+	mov		r13, rax
+
+	; malloc an array
 	mov		rdi, rax
-	imul	rdi, 8			; len * sizeof(void *)
+	imul	rdi, 8
 	call	malloc
 	test	rax, rax
 	jz		.end
-	mov		r14, rax		; void* array[]	
-
-; fill array with data
+	mov		r14, rax
+	
+	; fill array
 	xor		rcx, rcx
-	mov		rdx, [rbx]		; current
-.loop1:
-	test	rdx, rdx
-	jz		.sort
-	mov		r8, [rdx + 8]		; current->data
-	lea		r9, [r14 + 8 * rcx]
-	mov		[r9], r8
+	mov		r8, [rbx]		; t_list *current
+.fill:
+	cmp		rcx, r13
+	je		.sort
+	lea		r9, [r14 + rcx * 8]
+	mov		r9, r8
+	mov		r8, [r8]
 	inc		rcx
-	mov		rdx, [rdx]
-	jmp		.loop1
+	jmp		.fill
+
+	; sort array
 .sort:
 	mov		rdi, r14
 	mov		rsi, r13
 	mov		rdx, 8
-	mov		rcx, r12
-	call	qsort
-
-	push	QWORD 0	; new list
-	lea		r8, [rsp + 8]
-	mov		rcx, r13
-.loop2:
-	test	rcx, 0
-	je		.L1
-	mov		rdi, r8
-	lea		r9, [r14 + rcx * 8]
-	mov		rsi, [r9]
-	call	ft_list_push_front
-	dec		rcx
-	jmp		.loop2
-.L1:
-	
-
+	mov		rcx, cmp_wrap
 
 .end:
 	pop		r14
@@ -71,3 +59,13 @@ ft_list_sort:
 	leave
 	ret
 
+; int cmp(t_list *f, t_list *g, int (*cmp)()) { return cmp(f->data, g->data); }
+cmp_wrap:
+	enter	0, 0
+	
+	lea		rdi, [rdi + 8]
+	lea		rsi, [rsi + 8]
+	call	rdx
+
+	leave
+	ret

@@ -25,18 +25,23 @@ ft_atoi_base:
 	call	ft_strlen
 	mov		r14, rax		; save basesize
 	
+	; check base length
 	cmp		r14, 2			; basesize < 2
 	jl		.error
+
+	; check if base contains '+ or -'
 	mov		rdi, r12
-	lea		esi, [0 + '+']
+	mov		esi, '+'
 	call	strchr
 	cmp		rax, 0
 	jne		.error
 	mov		rdi, r12
-	lea		esi, [0 + '-']
+	mov		esi, '-'
 	call	strchr
 	cmp		rax, 0
 	jne		.error
+
+	; check if base contains duplicates
 .loop:
 	cmp		BYTE [r12 + r15], 0
 	jz		.whitespace
@@ -53,6 +58,7 @@ ft_atoi_base:
 	inc		r15
 	jmp		.loop
 
+	; skip whitespace
 .whitespace:
 	movzx	rdi, BYTE [rbx]
 	call	isspace
@@ -61,6 +67,7 @@ ft_atoi_base:
 	inc		rbx
 	jmp		.whitespace
 
+	; determine sign
 .sign:
 	mov		r15, 0			; total, for later
 	cmp		BYTE [rbx], '+'
@@ -72,6 +79,7 @@ ft_atoi_base:
 	inc		rbx
 	jmp		.sign
 	
+	; actually calculate the result
 .base:
 	mov		rdi, r12
 	movzx	esi, BYTE [rbx]
