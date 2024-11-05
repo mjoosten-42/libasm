@@ -27,7 +27,7 @@ ft_create_elem:
 	enter	0, 0
 	push	rdi
 	mov		rdi, 16
-	call	malloc
+	call	malloc wrt ..plt
 	test	rax, rax
 	jz		.end
 	mov		QWORD [rax], 0

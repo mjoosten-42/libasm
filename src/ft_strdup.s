@@ -1,6 +1,6 @@
 extern malloc
-extern ft_strlen
-extern ft_strcpy
+extern strlen
+extern strcpy
 
 global ft_strdup
 
@@ -10,16 +10,16 @@ section .text
 ft_strdup:
 	enter	0, 0
 	push	rdi				; save str
-	call	ft_strlen
+	call	strlen wrt ..plt
 	lea		rdi, [rax + 1]	; same as inc + mov
 	sub		rsp, 8			; align sp to 16 for malloc
-	call	malloc
+	call	malloc wrt ..plt
 	add		rsp, 8			; 
 	cmp		rax, 0
 	jz		.end
 	mov		rdi, rax
 	pop		rsi
-	call	ft_strcpy
+	call	strcpy wrt ..plt
 .end:
 	leave	
 	ret

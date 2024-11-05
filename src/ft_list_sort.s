@@ -1,56 +1,55 @@
 global ft_list_sort
 
-extern ft_list_push_front
-extern ft_list_size
-extern malloc
-extern qsort
-
 section .text
 
 ; void ft_list_sort(t_list **lst, int (*cmp)())
 ft_list_sort:
 	enter	0, 0
 
-	push	rbx				; **lst
-	push	r12				; (*cmp)
-	push	r13				; listsize
-	push	r14				; t_list *array[]
+	push	rbx
+	push	r12
+	push	r13
+	push	r14
+	push	r15
 
-	; get listsize, exit early if zero or one
-	mov		rdi, [rbx]
-	call	ft_list_size
-	cmp		rax, 2
-	jge		.end
-	mov		r13, rax
+	cmp		QWORD [rdi], 0	; if (!*lst)
+	je		.end
 
-	; malloc an array
-	mov		rdi, rax
-	imul	rdi, 8
-	call	malloc
-	test	rax, rax
-	jz		.end
-	mov		r14, rax
-	
-	; fill array
-	xor		rcx, rcx
-	mov		r8, [rbx]		; t_list *current
-.fill:
-	cmp		rcx, r13
-	je		.sort
-	lea		r9, [r14 + rcx * 8]
-	mov		r9, r8
-	mov		r8, [r8]
-	inc		rcx
-	jmp		.fill
+	mov		rbx, rdi		; prev
+	mov		r12, [rdi]		; current
+	xor		r13, r13		; next
+	mov		r14, rsi		; cmp
+	mov		r15, rdi		; lst_cpy
 
-	; sort array
-.sort:
-	mov		rdi, r14
-	mov		rsi, r13
-	mov		rdx, 8
-	mov		rcx, cmp_wrap
+.loop:
+	cmp		QWORD [r12], 0	; while (cur->next)
+	je		.end
+
+	mov		r13, [r12]		; next = cur->next
+	mov		rdi, [r12 + 8]
+	mov		rsi, [r13 + 8]
+	call	r14				; cmp(cur->data, next->data)
+	test	eax, eax
+	jle		.continue
+
+	; swap
+	mov		r8, [r13]		; after = next->next
+	mov		[r13], r12		; next->next = cur
+	mov		[r12], r8		; cur->next = after
+	mov		[rbx], r13		; prev->next = next
+
+	; start from beginning
+	mov		r12, [r15]		; cur = *lst_cpy
+	mov		rbx, r15		; lst = lst_cpy
+	jmp		.loop			
+
+.continue:
+	mov		r12, [r12]		; cur = cur->next
+	mov		rbx, [rbx]		; prev = prev->next
+	jmp		.loop
 
 .end:
+	pop		r15
 	pop		r14
 	pop		r13
 	pop		r12
@@ -59,13 +58,3 @@ ft_list_sort:
 	leave
 	ret
 
-; int cmp(t_list *f, t_list *g, int (*cmp)()) { return cmp(f->data, g->data); }
-cmp_wrap:
-	enter	0, 0
-	
-	lea		rdi, [rdi + 8]
-	lea		rsi, [rsi + 8]
-	call	rdx
-
-	leave
-	ret

@@ -1,7 +1,7 @@
 global ft_atoi_base
 
 extern isspace
-extern ft_strlen
+extern strlen
 extern strchr
 extern strrchr
 
@@ -22,7 +22,7 @@ ft_atoi_base:
 	mov		r15, 0
 
 	mov		rdi, rsi
-	call	ft_strlen
+	call	strlen wrt ..plt
 	mov		r14, rax		; save basesize
 	
 	; check base length
@@ -32,36 +32,40 @@ ft_atoi_base:
 	; check if base contains '+ or -'
 	mov		rdi, r12
 	mov		esi, '+'
-	call	strchr
+	call	strchr wrt ..plt
 	cmp		rax, 0
 	jne		.error
 	mov		rdi, r12
 	mov		esi, '-'
-	call	strchr
+	call	strchr wrt ..plt
 	cmp		rax, 0
 	jne		.error
 
-	; check if base contains duplicates
+	; check if base contains duplicates or whitespace
 .loop:
 	cmp		BYTE [r12 + r15], 0
 	jz		.whitespace
 	mov		rdi, r12
 	mov		esi, [r12 + r15]
-	call	strchr
+	call	strchr wrt ..plt
 	push	rax
 	mov		rdi, r12
 	mov		esi, [r12 + r15]
-	call	strrchr
+	call	strrchr wrt ..plt
 	pop		rcx
 	cmp		rax, rcx
 	jne		.error
+	movzx	edi, BYTE [r12 + r15]
+	call	isspace wrt ..plt
+	test	eax, eax
+	jnz		.error
 	inc		r15
 	jmp		.loop
 
 	; skip whitespace
 .whitespace:
 	movzx	rdi, BYTE [rbx]
-	call	isspace
+	call	isspace wrt ..plt
 	cmp		eax, 0
 	je		.sign
 	inc		rbx
@@ -83,7 +87,7 @@ ft_atoi_base:
 .base:
 	mov		rdi, r12
 	movzx	esi, BYTE [rbx]
-	call	strchr
+	call	strchr wrt ..plt
 	cmp		rax, 0
 	je		.end
 	sub		rax, r12
