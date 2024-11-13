@@ -6,8 +6,10 @@ section .text
 
 ft_list_push_front:
 	enter	0, 0
+
 	push	rbx
 	mov		rbx, rdi
+
 	mov		rdi, rsi
 	call	ft_create_elem
 	test	rax, rax
@@ -15,7 +17,7 @@ ft_list_push_front:
 	cmp		QWORD [rbx], 0
 	jz		.L1
 	mov		rcx, [rbx]
-	mov		[rax], rcx
+	mov		[rax + 8], rcx
 .L1:
 	mov		[rbx], rax
 .end:
@@ -25,13 +27,17 @@ ft_list_push_front:
 
 ft_create_elem:
 	enter	0, 0
-	push	rdi
+
+	push	rbx
+	mov		rbx, rdi
+	
 	mov		rdi, 16
 	call	malloc wrt ..plt
 	test	rax, rax
 	jz		.end
-	mov		QWORD [rax], 0
-	pop		QWORD [rax + 8]
+	mov		QWORD [rax + 8], 0
+	mov		QWORD [rax + 0], rbx
 .end:
+	pop		rbx
 	leave
 	ret

@@ -15,37 +15,37 @@ ft_list_sort:
 	cmp		QWORD [rdi], 0	; if (!*lst)
 	je		.end
 
-	mov		rbx, rdi		; prev
+	lea		rbx, [rdi - 8]	; prev
 	mov		r12, [rdi]		; current
 	xor		r13, r13		; next
 	mov		r14, rsi		; cmp
-	mov		r15, rdi		; lst_cpy
+	mov		r15, rdi		; lst
 
 .loop:
-	cmp		QWORD [r12], 0	; while (cur->next)
+	cmp		QWORD [r12 + 8], 0	; while (cur->next)
 	je		.end
 
-	mov		r13, [r12]		; next = cur->next
-	mov		rdi, [r12 + 8]
-	mov		rsi, [r13 + 8]
+	mov		r13, [r12 + 8]	; next = cur->next
+	mov		rdi, [r12 + 0]
+	mov		rsi, [r13 + 0]
 	call	r14				; cmp(cur->data, next->data)
 	test	eax, eax
 	jle		.continue
 
 	; swap
-	mov		r8, [r13]		; after = next->next
-	mov		[r13], r12		; next->next = cur
-	mov		[r12], r8		; cur->next = after
-	mov		[rbx], r13		; prev->next = next
+	mov		r8, [r13 + 8]		; after = next->next
+	mov		[r13 + 8], r12		; next->next = cur
+	mov		[r12 + 8], r8		; cur->next = after
+	mov		[rbx + 8], r13		; prev->next = next
 
 	; start from beginning
-	mov		r12, [r15]		; cur = *lst_cpy
-	mov		rbx, r15		; lst = lst_cpy
+	mov		r12, [r15]		; cur = *lst
+	lea		rbx, [r15 - 8]	; prev = lst
 	jmp		.loop			
 
 .continue:
-	mov		r12, [r12]		; cur = cur->next
-	mov		rbx, [rbx]		; prev = prev->next
+	mov		r12, [r12 + 8]		; cur = cur->next
+	mov		rbx, [rbx + 8]		; prev = prev->next
 	jmp		.loop
 
 .end:

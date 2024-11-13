@@ -9,43 +9,45 @@ section .text
 ft_list_remove_if:
 	enter	0, 0
 	
-	push	rbx			; lst
+	push	rbx			; prev
 	push	r12			; data
 	push	r13			; cmp
-	push	r14			; current
+	push	r14			; curr
 	push	r15			; free_fct/next
 
-	mov		rbx, rdi
+	lea		rbx, [rdi - 8] ; prev = lst
 	mov		r12, rsi
 	mov		r13, rdx
-	mov		r14, [rdi]	; *lst
+	mov		r14, [rdi]	; curr = *lst
 	mov		r15, rcx
 .loop:
 	test	r14, r14
 	jz		.end
 
-	mov		rdi, [r14 + 8]
+	; compare
+	mov		rdi, [r14 + 0]
 	mov		rsi, r12
-	call	r13
+	call	r13				; cmp(curr->data, data)
 	test	eax, eax
 	jnz		.continue
 
-	mov		rdi, [r14 + 8]	; cur->data
-	call	r15				; free_fct(cur->data)
+	; remove
+	mov		rdi, [r14 + 0]	; curr->data
+	call	r15				; free_fct(curr->data)
 
 	push	r15				; free_fct
-	mov		r15, [r14 + 0]	; next = cur->next
+	mov		r15, [r14 + 8]	; next = curr->next
 	mov		rdi, r14
 	call	free wrt ..plt
 
 	mov		r14, r15		; cur = next
 	pop		r15
-	mov		[rbx + 0], r14
+	mov		[rbx + 8], r14	; prev->next = cur
 	jmp		.loop
 
 .continue:
-	mov		rbx, [rbx + 0]
-	mov		r14, [r14 + 0]
+	mov		rbx, [rbx + 8]	; prev = prev->next
+	mov		r14, [r14 + 8]	; curr = curr->next
 	jmp		.loop
 
 .end:

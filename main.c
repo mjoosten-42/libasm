@@ -11,7 +11,9 @@
 #define SIZEOF(array) (int)(sizeof(array)/sizeof(*array))
 
 void nop(void *data) {
-	(void)data;
+	ASSERT(data != (void *)42);
+
+	data = (void *)42;
 }
 
 int cmp(void *f, void *g) {
@@ -23,8 +25,6 @@ int lt(void *f, void *g) {
 }
 
 int main() {
-	t_list *lst = NULL;
-
 	char *strs[] = {
 		"",
 		"a",
@@ -73,6 +73,8 @@ int main() {
 	ASSERT(ft_read(-1, NULL, 1) == -1);
 	ASSERT(errno == EBADF);
 
+	errno = 0;
+
 	ASSERT(ft_write(-1, NULL, 1) == -1);
 	ASSERT(errno == EBADF);
 
@@ -92,70 +94,99 @@ int main() {
 	}
 
 	// ft_atoi_base
-	ASSERT(ft_atoi_base("00101010", "") == 0);
-	ASSERT(ft_atoi_base("00101010", "0") == 0);
-	ASSERT(ft_atoi_base("00101010", "01+") == 0);
-	ASSERT(ft_atoi_base("00101010", "01-") == 0);
-	ASSERT(ft_atoi_base("00101010", "01 ") == 0);
-	ASSERT(ft_atoi_base("00101010", "01\t") == 0);
-	ASSERT(ft_atoi_base("00101010", "01\n") == 0);
-
+	ASSERT(ft_atoi_base("", "") == 0);
+	ASSERT(ft_atoi_base("", "0") == 0);
+	ASSERT(ft_atoi_base("", "01+") == 0);
+	ASSERT(ft_atoi_base("", "01-") == 0);
+	ASSERT(ft_atoi_base("", "01 ") == 0);
+	ASSERT(ft_atoi_base("", "01\t") == 0);
+	ASSERT(ft_atoi_base("", "01\n") == 0);
 	ASSERT(ft_atoi_base("00101010", "01") == 42);
 	ASSERT(ft_atoi_base("42", "0123456789") == 42);
-	ASSERT(ft_atoi_base("2A", "0123456789abcdef") == 42);
-
+	ASSERT(ft_atoi_base("2A", "0123456789ABCDEF") == 42);
 	ASSERT(ft_atoi_base("   +42", "0123456789") == 42);
 	ASSERT(ft_atoi_base("   -42", "0123456789") == -42);
 	ASSERT(ft_atoi_base("   +--+-42", "0123456789") == -42);
 	ASSERT(ft_atoi_base("   \t42", "0123456789") == 42);
-
+	ASSERT(ft_atoi_base(" +42a42", "0123456789") == 42);	
+	ASSERT(ft_atoi_base("   +-+-0644", "01234567") == 420);
 	ASSERT(ft_atoi_base("c42", "0123456789") == 0);
 	ASSERT(ft_atoi_base(" c42", "0123456789") == 0);
 	ASSERT(ft_atoi_base(" +c42", "0123456789") == 0);
+	ASSERT(ft_atoi_base(" +c42a42", "0123456789") == 0);
 
+	t_list *lst = NULL;
+	void *values[] = { (void *)0x0, (void *)0x1, (void *)0x2 };
+	
+	// ft_list_push_front
+	ft_list_push_front(&lst, values[0]);
+	ASSERT(lst->data == values[0]);
+	ASSERT(lst->next == NULL);
 
+	ft_list_push_front(&lst, values[1]);
+	ASSERT(lst->data == values[1]);
+	ASSERT(lst->next->data == values[0]);
+	ASSERT(lst->next->next == NULL);
+	
+	ft_list_push_front(&lst, values[2]);
+	ASSERT(lst->data == values[2]);
+	ASSERT(lst->next->data == values[1]);
+	ASSERT(lst->next->next->data == values[0]);
+	ASSERT(lst->next->next->next == NULL);
 
-	// ft_list_remove_if
-	ft_list_remove_if(&lst, (void *)0x789, cmp, nop);
+	lst = NULL;
+
+	// ft_list_size
+	ASSERT(ft_list_size(lst) == 0);
+	ft_list_push_front(&lst, values[0]);
+	ASSERT(ft_list_size(lst) == 1);
+	ft_list_push_front(&lst, values[1]);
+	ASSERT(ft_list_size(lst) == 2);
+
+	lst = NULL;
+	
+	// ft_list_sort
+	ft_list_sort(&lst, cmp);
 	ASSERT(lst == NULL);
 
-	ft_list_push_front(&lst, (void *)0x789);
-	ft_list_push_front(&lst, (void *)0x456);
-	ft_list_push_front(&lst, (void *)0x123);
+	ft_list_push_front(&lst, values[0]);
+	ft_list_push_front(&lst, values[1]);
+	ft_list_push_front(&lst, values[2]);
 
-	ft_list_remove_if(&lst, (void *)0x456, cmp, nop);
+	ft_list_sort(&lst, cmp);
+	ASSERT(lst->data == values[0]);
+	ASSERT(lst->next->data == values[1]);
+	ASSERT(lst->next->next->data == values[2]);
+
+	ft_list_sort(&lst, cmp);
+	ASSERT(lst->data == values[0]);
+	ASSERT(lst->next->data == values[1]);
+	ASSERT(lst->next->next->data == values[2]);
+	
+	lst = NULL;
+	
+	// ft_list_remove_if
+	ft_list_remove_if(&lst, values[0], cmp, nop);
+	ASSERT(lst == NULL);
+
+	ft_list_push_front(&lst, values[2]);
+	ft_list_push_front(&lst, values[1]);
+	ft_list_push_front(&lst, values[0]);
+
+	ft_list_remove_if(&lst, values[1], cmp, nop);
 	ASSERT(ft_list_size(lst) == 2);
-	ASSERT(lst->next->data == (void *)0x789);
+	ASSERT(lst->data == values[0]);
+	ASSERT(lst->next->data == values[2]);
 
 	ft_list_remove_if(&lst, (void *)-1, lt, nop);
 	ASSERT(lst == NULL);
 	
-	ft_list_push_front(&lst, (void *)0x456);
-	ft_list_remove_if(&lst, (void *)0x123, cmp, nop);
-	ASSERT(lst->data == (void *)0x456);
+	ft_list_push_front(&lst, values[1]);
+	ft_list_remove_if(&lst, values[0], cmp, nop);
+	ASSERT(lst->data == values[1]);
 
-	ft_list_push_front(&lst, (void *)0x123);
-	ft_list_remove_if(&lst, (void *)0x123, cmp, nop);
-	ASSERT(lst->data == (void *)0x456);
-
-	// ft_list_sort
-	lst = NULL;
-
-	ft_list_sort(&lst, cmp);
-	ASSERT(lst == NULL);
-
-	ft_list_push_front(&lst, (void *)0x123);
-	ft_list_push_front(&lst, (void *)0x456);
-	ft_list_push_front(&lst, (void *)0x789);
-
-	ft_list_sort(&lst, cmp);
-	ASSERT(lst->data == (void *)0x123);
-	ASSERT(lst->next->data == (void *)0x456);
-	ASSERT(lst->next->next->data == (void *)0x789);
-
-	ft_list_sort(&lst, cmp);
-	ASSERT(lst->data == (void *)0x123);
-	ASSERT(lst->next->data == (void *)0x456);
-	ASSERT(lst->next->next->data == (void *)0x789);
+	ft_list_push_front(&lst, values[1]);
+	ft_list_remove_if(&lst, values[0], cmp, nop);
+	ASSERT(lst->data == values[1]);
 }
 

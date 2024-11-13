@@ -9,7 +9,7 @@ ft_list_size:
 	test	rdi, rdi
 	jz		.end
 	inc		rax
-	mov		rdi, [rdi]
+	mov		rdi, [rdi + 8]
 	jmp		.loop
 .end:
 	leave

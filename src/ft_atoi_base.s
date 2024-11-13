@@ -5,6 +5,8 @@ extern strlen
 extern strchr
 extern strrchr
 
+section .text
+
 ; rdi = const char *str
 ; rsi = const char *base
 ft_atoi_base:
@@ -36,7 +38,7 @@ ft_atoi_base:
 	cmp		rax, 0
 	jne		.error
 	mov		rdi, r12
-	mov		esi, '-'
+	mov 	esi, '-'
 	call	strchr wrt ..plt
 	cmp		rax, 0
 	jne		.error
@@ -46,19 +48,19 @@ ft_atoi_base:
 	cmp		BYTE [r12 + r15], 0
 	jz		.whitespace
 	mov		rdi, r12
-	mov		esi, [r12 + r15]
+	movzx	esi, BYTE [r12 + r15]
 	call	strchr wrt ..plt
 	push	rax
 	mov		rdi, r12
-	mov		esi, [r12 + r15]
+	movzx	esi, BYTE [r12 + r15]
 	call	strrchr wrt ..plt
 	pop		rcx
 	cmp		rax, rcx
 	jne		.error
 	movzx	edi, BYTE [r12 + r15]
 	call	isspace wrt ..plt
-	test	eax, eax
-	jnz		.error
+	cmp		eax, 0
+	jne		.error
 	inc		r15
 	jmp		.loop
 
@@ -112,5 +114,6 @@ ft_atoi_base:
 	ret
 
 .error:
+	mov		r15, 0
 	mov		ecx, 0
 	jmp		.end
