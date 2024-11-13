@@ -1,15 +1,13 @@
 global ft_strlen
 
-section .text
-
 ; rdi = const char *str
 ft_strlen:
-	mov		rax, rdi
+	xor			rcx, rcx
+	pxor		xmm0, xmm0
+	mov			rax, 0
 .loop:
-	cmp		BYTE [rax], 0
-	jz		.end				
-	inc		rax
-	jmp		.loop
-.end:
-	sub		rax, rdi
+	add			rax, rcx
+	pcmpistri	xmm0, oword [rdi + rax], 0b00001000
+	jnz			.loop
+	add			rax, rcx
 	ret
