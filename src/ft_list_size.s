@@ -3,7 +3,6 @@ global ft_list_size
 section .text
 
 ft_list_size:
-	enter	0, 0
 	xor		rax, rax
 .loop:
 	test	rdi, rdi
@@ -12,6 +11,5 @@ ft_list_size:
 	mov		rdi, [rdi + 8]
 	jmp		.loop
 .end:
-	leave
 	ret
 

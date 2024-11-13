@@ -4,8 +4,6 @@ section .text
 
 ; void ft_list_sort(t_list **lst, int (*cmp)())
 ft_list_sort:
-	enter	0, 0
-
 	push	rbx
 	push	r12
 	push	r13
@@ -54,7 +52,6 @@ ft_list_sort:
 	pop		r13
 	pop		r12
 	pop		rbx
-
-	leave
+	
 	ret
 

@@ -7,8 +7,6 @@ section .text
 ;void ft_list_remove_if(t_list **lst, void *data, int (*cmp)(), void
 		;(*free)(void *));
 ft_list_remove_if:
-	enter	0, 0
-	
 	push	rbx			; prev
 	push	r12			; data
 	push	r13			; cmp
@@ -56,8 +54,6 @@ ft_list_remove_if:
 	pop		r13
 	pop		r12
 	pop		rbx
-
-	leave
 	ret
 
 

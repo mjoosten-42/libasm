@@ -1,7 +1,7 @@
 global ft_atoi_base
 
 extern isspace
-extern strlen
+extern ft_strlen
 extern strchr
 extern strrchr
 
@@ -10,8 +10,6 @@ section .text
 ; rdi = const char *str
 ; rsi = const char *base
 ft_atoi_base:
-	enter	0, 0
-
 	push	rbx				; str
 	push	r12				; base
 	push	r13				; sign
@@ -24,7 +22,7 @@ ft_atoi_base:
 	mov		r15, 0
 
 	mov		rdi, rsi
-	call	strlen wrt ..plt
+	call	ft_strlen
 	mov		r14, rax		; save basesize
 	
 	; check base length
@@ -110,7 +108,6 @@ ft_atoi_base:
 	pop		r12
 	pop		rbx
 
-	leave
 	ret
 
 .error:

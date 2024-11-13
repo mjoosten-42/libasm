@@ -16,7 +16,7 @@ OBJECTS = $(patsubst $(SRC_DIR)/%,$(OBJ_DIR)/%,$(SOURCES:.$(ASM_EXT)=.o))
 DEBUG ?= 1
 
 ifeq ($(DEBUG), 1)
-	AFLAGS += -g
+	AFLAGS += -g -w+all
 	CFLAGS += -g -O0 
 endif
 

@@ -5,7 +5,6 @@ section .text
 ; rdi = char *dest
 ; rsi = const char *src
 ft_strcpy:
-	enter	0, 0
 	mov		rcx, 0
 	mov		rax, rdi
 .loop:
@@ -16,6 +15,5 @@ ft_strcpy:
 	inc		rcx
 	jmp		.loop
 .end:
-	leave
 	ret
 	

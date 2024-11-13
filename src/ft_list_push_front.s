@@ -5,8 +5,6 @@ extern malloc
 section .text
 
 ft_list_push_front:
-	enter	0, 0
-
 	push	rbx
 	mov		rbx, rdi
 
@@ -22,12 +20,9 @@ ft_list_push_front:
 	mov		[rbx], rax
 .end:
 	pop		rbx
-	leave
 	ret
 
 ft_create_elem:
-	enter	0, 0
-
 	push	rbx
 	mov		rbx, rdi
 	
@@ -39,5 +34,4 @@ ft_create_elem:
 	mov		QWORD [rax + 0], rbx
 .end:
 	pop		rbx
-	leave
 	ret

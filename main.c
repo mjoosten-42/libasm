@@ -25,6 +25,7 @@ int lt(void *f, void *g) {
 }
 
 int main() {
+	char s[64] = { 0 };
 	char *strs[] = {
 		"",
 		"a",
@@ -37,6 +38,9 @@ int main() {
 	for (int i = 0; i < SIZEOF(strs); i++) {
 		ASSERT(strlen(strs[i]) == ft_strlen(strs[i]));
 	}
+
+	strcpy(s + 1, "not word-aligned");
+	ASSERT(ft_strlen(s + 1) == 16);
 
 	// ft_strcpy
 	char dest[]		= "xxxxxxxxxxxxxxxxxxxxx";

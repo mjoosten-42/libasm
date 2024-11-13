@@ -4,14 +4,12 @@ section .text
 
 ; rdi = const char *str
 ft_strlen:
-	enter	0, 0	
 	mov		rax, rdi
-	.loop:
+.loop:
 	cmp		BYTE [rax], 0
 	jz		.end				
 	inc		rax
 	jmp		.loop
-	.end:
+.end:
 	sub		rax, rdi
-	leave
 	ret
