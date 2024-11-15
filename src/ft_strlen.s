@@ -2,9 +2,9 @@ global ft_strlen
 
 ; rdi = const char *str
 ft_strlen:
-	xor			rcx, rcx
 	pxor		xmm0, xmm0
-	mov			rax, 0
+	xor			rax, rax
+	xor			rcx, rcx
 .loop:
 	add			rax, rcx
 	pcmpistri	xmm0, oword [rdi + rax], 0b00001000

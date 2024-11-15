@@ -3,7 +3,7 @@ global ft_strcmp
 ; rdi = const char *s1
 ; rsi = const char *s2
 ft_strcmp:
-	xor			eax, eax
+	xor			eax, eax	; zero ret in case of identical strings
 	xor			rcx, rcx
 	xor			rdx, rdx
 .loop:
@@ -11,9 +11,8 @@ ft_strcmp:
 	movdqu		xmm0, oword [rdi + rdx]
 	pcmpistri	xmm0, oword [rsi + rdx], 0b00011000
 	ja			.loop								; CFlag(IntRes2) = 0 && ZFlag = 0
-	jnc			.end
+	jnc			.end								; Null byte, identical strings
 
-	// TODO: check
 	add			rdx, rcx
 	movzx		eax, BYTE [rdi + rdx]
 	movzx		ecx, BYTE [rsi + rdx]
