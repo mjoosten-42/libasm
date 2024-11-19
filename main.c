@@ -41,6 +41,7 @@ int main() {
 	huge[HUGE - 1] = '\0';
 
 	ASSERT(ft_strlen(huge) == HUGE - 1);
+	ASSERT(ft_strcmp(huge, huge) == 0);
 
 	// ft_strlen
 	for (int i = 0; i < SIZEOF(strs); i++) {
