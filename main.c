@@ -9,6 +9,7 @@
 
 #define ASSERT(EX) (void)((EX) || fprintf(stderr, "Assertion failed: " #EX " at " __FILE__ ":%d\n",__LINE__))
 #define SIZEOF(array) (int)(sizeof(array)/sizeof(*array))
+#define HUGE (5UL * 1024 * 1024 * 1024)
 
 void nop(void *data) {
 	ASSERT(data != (void *)42);
@@ -33,6 +34,13 @@ int main() {
 		"d\0e",
 		"a slightly longer string",
 	};
+
+	char *huge = malloc(HUGE);
+
+	memset(huge, 'a', HUGE);
+	huge[HUGE - 1] = '\0';
+
+	ASSERT(ft_strlen(huge) == HUGE - 1);
 
 	// ft_strlen
 	for (int i = 0; i < SIZEOF(strs); i++) {
@@ -68,9 +76,11 @@ int main() {
 	
 	for (int i = 0; i < SIZEOF(strs); i++) {
 		ft_write(fds[1], strs[i], ft_strlen(strs[i]));
+		ASSERT(errno == 0);
 	}
 
-	read(fds[0], buf2, 1024);
+	ft_read(fds[0], buf2, 1024);
+	ASSERT(errno == 0);
 	
 	ASSERT(!strncmp(buf1, buf2, 1024));
 

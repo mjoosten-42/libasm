@@ -7,8 +7,8 @@ section .text
 ft_read:
 	mov		rax, 0	; read
 	syscall	
-	cmp		rax, 0
-	jz		.end
+	test	rax, rax
+	jns		.end
 	
 	; error
 	neg		rax

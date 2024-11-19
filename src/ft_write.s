@@ -8,7 +8,7 @@ ft_write:
 	mov		rax, 1	; write
 	syscall	
 	test	rax, rax
-	jz		.end
+	jns		.end
 	
 	; error
 	neg		rax
